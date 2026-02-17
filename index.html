@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShinyHunt Baseline</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-ball" aria-hidden="true">◓</span>
+        <div>
+          <p class="eyebrow">ShinyHunt-style tracker</p>
+          <h1>Shiny Hunt Tracker</h1>
+        </div>
+      </div>
+      <nav class="menu" aria-label="Primary">
+        <button class="menu-item active" type="button" data-page="dashboard">Dashboard</button>
+        <button class="menu-item" type="button" data-page="pokedex">Pokédex</button>
+      </nav>
+    </header>
+
+    <main class="shell page active" data-page="dashboard">
+      <aside class="panel">
+        <h2>Create New Hunt</h2>
+        <p class="muted">Odds are auto-calculated by game + method + charm + chain.</p>
+        <form id="hunt-form" class="stack">
+          <label class="pokemon-field">
+            Pokémon
+            <input id="pokemon" name="pokemon" autocomplete="off" required placeholder="Type to filter Pokémon grid" />
+            <div id="pokemon-picker" class="picker" hidden>
+              <div id="pokemon-picker-grid" class="picker-grid"></div>
+            </div>
+          </label>
+          <label>
+            Game
+            <select id="game" name="game" required></select>
+          </label>
+          <label>
+            Method
+            <select id="method" name="method" required></select>
+          </label>
+          <label class="inline-toggle">
+            <input id="shiny-charm" name="shinyCharm" type="checkbox" />
+            I have the shiny charm
+          </label>
+          <label id="chain-group">
+            Chain count (if method supports chaining)
+            <input id="chain-count" name="chainCount" type="number" min="0" value="0" />
+          </label>
+          <p class="pill" id="odds-preview">Per-encounter odds: --</p>
+          <button type="submit">Start Hunt</button>
+        </form>
+      </aside>
+
+      <section class="panel" aria-labelledby="active-hunts-title">
+        <div class="hero">
+          <h2 id="active-hunts-title">Active Hunts</h2>
+          <p class="muted">Track encounters, phases, chain state, elapsed time, and shiny chances.</p>
+        </div>
+
+        <div class="heading-row">
+          <button id="clear-data" class="ghost" type="button">Reset All</button>
+        </div>
+
+        <div class="toolbar">
+          <label>
+            View
+            <select id="filter-status">
+              <option value="all">All hunts</option>
+              <option value="active">Active only</option>
+              <option value="complete">Completed only</option>
+            </select>
+          </label>
+          <label>
+            Sort
+            <select id="sort-by">
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+              <option value="encounters">Most encounters</option>
+              <option value="chance">Highest seen-by-now chance</option>
+            </select>
+          </label>
+          <label>
+            Search
+            <input id="search" placeholder="Filter by Pokémon or game" />
+          </label>
+        </div>
+
+        <div class="summary" id="summary"></div>
+        <div id="hunts-list" class="stack" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <main class="shell page" data-page="pokedex">
+      <section class="panel panel-full">
+        <h2>Pokédex Hunt Methods</h2>
+        <p class="muted">Pick a Pokémon to view game availability and shiny methods, including notable glitch methods.</p>
+        <label>
+          Search Pokémon
+          <input id="dex-search" placeholder="e.g. Cyndaquil" />
+        </label>
+        <div id="dex-grid" class="picker-grid dex-grid"></div>
+      </section>
+      <section class="panel panel-full" id="dex-details">
+        <h3>Select a Pokémon to view shiny hunting methods</h3>
+      </section>
+    </main>
+
+    <template id="hunt-template">
+      <article class="hunt-item">
+        <div class="hunt-main">
+          <div class="sprite-wrap">
+            <img class="hunt-sprite" alt="" loading="lazy" />
+            <p class="sprite-source">Artwork: PokéAPI</p>
+          </div>
+          <div>
+            <div class="hunt-top">
+              <h3 class="hunt-name"></h3>
+              <span class="badge hunt-status"></span>
+            </div>
+            <p class="hunt-meta"></p>
+            <div class="stats-grid">
+              <p><strong>Encounters</strong><span class="encounters"></span></p>
+              <p><strong>Phase</strong><span class="phase"></span></p>
+              <p><strong>Time</strong><span class="stopwatch"></span></p>
+              <p><strong>Per-encounter odds</strong><span class="odds"></span></p>
+              <p><strong>Seen shiny by now</strong><span class="chance"></span></p>
+            </div>
+          </div>
+        </div>
+        <div class="reset-row">
+          <button class="add-reset ghost" type="button">Add Reset</button>
+        </div>
+        <div class="button-row">
+          <button class="add-encounter" type="button">+1 Encounter</button>
+          <button class="add-encounter-10 ghost" type="button">+10</button>
+          <button class="remove-encounter ghost" type="button">-1</button>
+          <button class="remove-encounter-10 ghost" type="button">-10</button>
+          <button class="add-phase ghost" type="button">Next Phase</button>
+          <button class="chain-reset ghost" type="button">Reset Chain</button>
+          <button class="toggle-complete ghost" type="button">Mark Complete</button>
+          <button class="delete danger" type="button">Delete</button>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
